@@ -13,36 +13,20 @@ library(shinydashboard)
 library(shinythemes)
 library(shinyjs)
 library(data.table)
-library(dtplyr)
+#library(dtplyr)
 library(DT) 
-library(plotly)
-library(tools)
-library(survminer)
-library(survival)
+# library(plotly)
+# library(tools)
 library(RSQLite)
 library(DBI)
-library(ggvis)
-library(utils)
- 
-library(stringr)
-library(reshape2)
 library(ggplot2)
 library(ggthemes)
-library(plotrix)
-#libraries for maftools
-library(RColorBrewer)
-library(animation)
-library(rvest)
-library(png)
-# library(EBImage)
- 
+#library(plotrix)
 library(networkD3)
-library(plyr)
+# library(plyr)
 library(dplyr)
-library(htmltools)
-library(visNetwork)
 #Enhance speed
-library(compiler)
+#library(compiler)
 #Dynamic report
 library(markdown)
 #loading page
@@ -52,6 +36,8 @@ library(clusterProfiler)
 library(GSEABase)
 #network topology
 library(igraph)
+
+ 
 #' =============================================================
 #' End
 #'==============================================================

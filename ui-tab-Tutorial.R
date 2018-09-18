@@ -3,12 +3,12 @@
 #'==============================================================
 tabPanel(
   title = "Tutorial",icon = icon("book"),
-  uiOutput("Tutorial_ui")%>% 
+  uiOutput("Tutorial_ui") %>% 
     withSpinner(
-      color =  "#32CD32",
-      type = 1,
+      color =  "#00AEAE",
+      type = 5,
       size = 2
-    )
+    ) 
 )
 #' =============================================================
 #' End

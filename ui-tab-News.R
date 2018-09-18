@@ -5,10 +5,10 @@ tabPanel(
   title = "News",icon = icon("newspaper-o"),
   uiOutput("News_ui") %>% 
     withSpinner(
-      color =  "#32CD32",
-      type = 1,
+      color =  "#00AEAE",
+      type = 5,
       size = 2
-    )
+    ) 
 )
 #' =============================================================
 #' End

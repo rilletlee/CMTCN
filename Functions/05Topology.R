@@ -38,3 +38,4 @@ net_Density <- function(net){
   ed <- edge_density(net)
   return(ed)
 }
+

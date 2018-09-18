@@ -28,12 +28,11 @@ navbarPage(
   id = "NavyID",
   # source UI pages
   
- # source("ui-tab-Home.R",local = TRUE)$value,
   source("ui-tab-Start.R",local = TRUE)$value,
   source("ui-tab-Network.R",local = TRUE)$value,
- # source("ui-tab-Download.R",local = TRUE)$value,
   source("ui-tab-Tutorial.R",local = TRUE)$value,
   source("ui-tab-News.R",local = TRUE)$value,
+  source("ui-tab-About.R",local = TRUE)$value,
   
   #'==============================================================
   #'Footer

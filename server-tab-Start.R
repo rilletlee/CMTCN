@@ -159,6 +159,7 @@ output$Start_ui <- renderUI({
           status = "info",
           background = "blue",
           useShinyjs(),
+          p(
           radioButtons(inputId = "NetType",
                        label =  HTML("<font size=\"4\"color=\"#EED2EE\">
                                      Choose the Network Type
@@ -169,8 +170,8 @@ output$Start_ui <- renderUI({
                        ),
                        selected = "FI",
                        inline = T
-                       ),
-          
+                       ) 
+          ),
           conditionalPanel(
             condition = "input.NetType == 'SB'",
             #'=============================================
@@ -180,12 +181,18 @@ output$Start_ui <- renderUI({
             hr(),
             radioButtons(inputId = "GeneSource",
                          label = HTML("<p>Select Input Data Source:</p>"), 
-                         choices = c("Survival-related Genes" = "SR",
-                                     "Drug Response-related Genes" = "DR",
-                                     "Top Mutated Gene" = "TM",
-                                     "Custom Input" = "CI",
-                                     "Upload Data" = "UD"),
-                         selected = "SR",
+                         # choices = c("Survival-related Genes" = "SR",
+                         #             "Drug Response-related Genes" = "DR",
+                         #             "Top Mutated Gene" = "TM",
+                         #             "Custom Input" = "CI",
+                         #             "Upload Data" = "UD"),
+                         choices = c(
+                           "Top Mutated Genes" = "TM",
+                           "Clinical Stage-related Genes" = "CS",
+                           "Custom Input" = "CI",
+                           "Upload Data" = "UD"
+                         ),
+                         selected = "TM",
                          inline = F
             ),
             hr(),
@@ -195,26 +202,26 @@ output$Start_ui <- renderUI({
             #'=============================================
             #========================================================
             conditionalPanel(
-              condition = "input.GeneSource == 'SR'",
-              sliderInput("SR_Candidates", "Top Candidates", min=1, max=500, value=150),
-              p(HTML("<p>&nbsp;&nbsp;Survival-related Genes:</p>"))
+              condition = "input.GeneSource == 'CS'",
+              sliderInput("CS_Candidates", "Top Candidates", min=1, max=50, value=25),
+              p(HTML("<p>&nbsp;&nbsp;Clinical Stage-related Genes:</p>"))
             ),
             #'=============================================
             #'@description Conditional-2 Load Drug Response Related Gene
             #'@param inputID the ID of the input, equals to "GeneSource"
             #'=============================================
-            conditionalPanel(
-              condition = "input.GeneSource == 'DR'",
-              sliderInput("DR_Candidates", "Top Candidates", min=1, max=500, value=150),
-              p(HTML("<p>&nbsp;&nbsp;Drug Response-related Genes:</p>"))
-            ),
+            # conditionalPanel(
+            #   condition = "input.GeneSource == 'DR'",
+            #   sliderInput("DR_Candidates", "Top Candidates", min=1, max=500, value=150),
+            #   p(HTML("<p>&nbsp;&nbsp;Drug Response-related Genes:</p>"))
+            # ),
             #'=============================================
             #'@description Conditional-3 Top Mutated Gene
             #'@param inputID the ID of the input, equals to "GeneSource"
             #'=============================================
             conditionalPanel(
               condition = "input.GeneSource == 'TM'",
-              sliderInput("TM_Candidates", "Top Candidates", min=1, max=500, value=150),
+              sliderInput("TM_Candidates", "Top Candidates", min=1, max=500, value=100),
               p(HTML("<p>&nbsp;&nbsp;Top Mutated Genes:</p>"))
             ),
             #====================================================
@@ -464,16 +471,17 @@ output$Build_Download <- downloadHandler(
 #' =============================================================
 observe({
   if(!is.null(input$GeneSource)){
-    if(input$GeneSource == "SR"|
-       input$GeneSource == "DR"|
+    if(input$GeneSource == "CS"|
+       # input$GeneSource == "DR"|
        input$GeneSource == "TM"){
           phenoData <- GeneInput()
           if(!is.null(phenoData)){
             # CandidateN <- input$BuildCandidates
-            if(input$GeneSource == "SR"){CandidateN <- input$SR_Candidates}
-            if(input$GeneSource == "DR"){CandidateN <- input$DR_Candidates}
+            if(input$GeneSource == "CS"){CandidateN <- input$CS_Candidates}
+            # if(input$GeneSource == "DR"){CandidateN <- input$DR_Candidates}
             if(input$GeneSource == "TM"){CandidateN <- input$TM_Candidates}
             phenoDataLen <- nrow(phenoData)
+            #column 1 is gene symbol
             if(CandidateN <= phenoDataLen){
               RegQueryList <- phenoData[1:CandidateN,1]
             }else{
@@ -506,12 +514,12 @@ GeneInput <- isolate({
     if(is.null(input$GeneSource)){
       return(NULL)
     } 
-    if(input$GeneSource == 'SR'){
-      GEdbQuery <- c("./Database/surRNA.db")
+    if(input$GeneSource == 'CS'){
+      GEdbQuery <- c("./Database/Clin_Stage.db")
     }
-    if(input$GeneSource == 'DR'){
-      GEdbQuery <- c("./Database/drugRNA.db")
-    }
+    # if(input$GeneSource == 'DR'){
+    #   GEdbQuery <- c("./Database/drugRNA.db")
+    # }
     if(input$GeneSource == 'TM'){
       GEdbQuery <- c("./Database/TopMutated.db")
     }
@@ -582,4 +590,18 @@ observe({
     }
   }
 })
- 
+#' #'*******************************************************
+#' #'@description help message
+#' #'*******************************************************
+observeEvent(input$Build_Act, {
+  showNotification(
+                  "Your query has been successfully submitted.See the results!",
+                  type = "message",
+                  duration = 5)
+})
+observeEvent(input$Build_Clear, {
+  showNotification(
+    "Reset settings to default.",
+    type = "message",
+    duration = 2)
+})

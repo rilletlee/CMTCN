@@ -10,7 +10,7 @@
 #' CFFL_Data <- Pick_CFFL(Disease,Rcut=0.2)
 #' ************************************************************
 
-Pick_SP <- function(Disease,Pcut=0.05,Rcut=NULL){
+Pick_SP <- function(Disease,Pcut=0.05,Rcut=NULL,TFReg=c("Pos","Neg","Bot")){
   sqlite <- dbDriver("SQLite")
   con <- dbConnect(sqlite,"./Database/CoMotif.db")
   TableName <- paste0(Disease,"CMotif")
@@ -29,17 +29,37 @@ Pick_SP <- function(Disease,Pcut=0.05,Rcut=NULL){
     SP_Data <- SP_Data[which(SP_Data$P_TG<=Pcut&
                                SP_Data$P_MG<=Pcut),]
   }else{
-    SP_Data <- SP_Data[which(SP_Data$P_TG<=Pcut&
-                             SP_Data$P_MG<=Pcut&
-                             abs(SP_Data$R_TG)>=Rcut&
-                             abs(SP_Data$R_MG)>=Rcut&
-                             SP_Data$R_MG < 0
-                        ),]
+    if(TFReg==c("Bot")){
+      SP_Data <- SP_Data[which(SP_Data$P_TG<=Pcut&
+                                 SP_Data$P_MG<=Pcut&
+                                 abs(SP_Data$R_TG)>=Rcut&
+                                 abs(SP_Data$R_MG)>=Rcut&
+                                 SP_Data$R_MG < 0
+      ),]
+    }
+    if(TFReg==c("Pos")){
+      SP_Data <- SP_Data[which(SP_Data$P_TG<=Pcut&
+                                 SP_Data$P_MG<=Pcut&
+                                 abs(SP_Data$R_TG)>=Rcut&
+                                 abs(SP_Data$R_MG)>=Rcut&
+                                 SP_Data$R_MG < 0&
+                                 SP_Data$R_TG > 0
+      ),]
+    }
+    if(TFReg==c("Neg")){
+      SP_Data <- SP_Data[which(SP_Data$P_TG<=Pcut&
+                                 SP_Data$P_MG<=Pcut&
+                                 abs(SP_Data$R_TG)>=Rcut&
+                                 abs(SP_Data$R_MG)>=Rcut&
+                                 SP_Data$R_MG < 0&
+                                 SP_Data$R_TG < 0
+      ),]
+    }
   }
   return(SP_Data) 
 }
 
-Pick_TFFL <- function(Disease,Pcut=0.05,Rcut=NULL){
+Pick_TFFL <- function(Disease,Pcut=0.05,Rcut=NULL,TFReg=c("Pos","Neg","Bot")){
   sqlite <- dbDriver("SQLite")
   con <- dbConnect(sqlite,"./Database/CoMotif.db")
   TableName <- paste0(Disease,"CMotif")
@@ -59,19 +79,45 @@ Pick_TFFL <- function(Disease,Pcut=0.05,Rcut=NULL){
                                TFFL_Data$P_TM<=Pcut&
                                TFFL_Data$P_MG<=Pcut),]
   }else{
-    TFFL_Data <- TFFL_Data[which(TFFL_Data$P_TG<=Pcut&
-                               TFFL_Data$P_TM<=Pcut&
-                               TFFL_Data$P_MG<=Pcut&
-                               abs(TFFL_Data$R_TG)>=Rcut&
-                               abs(TFFL_Data$R_TM)>=Rcut&
-                               abs(TFFL_Data$R_MG)>=Rcut&
-                               TFFL_Data$R_MG < 0
-    ),]
+    if(TFReg==c("Bot")){
+      TFFL_Data <- TFFL_Data[which(TFFL_Data$P_TG<=Pcut&
+                                     TFFL_Data$P_TM<=Pcut&
+                                     TFFL_Data$P_MG<=Pcut&
+                                     abs(TFFL_Data$R_TG)>=Rcut&
+                                     abs(TFFL_Data$R_TM)>=Rcut&
+                                     abs(TFFL_Data$R_MG)>=Rcut&
+                                     TFFL_Data$R_MG < 0
+      ),]
+    }
+    if(TFReg==c("Pos")){
+      TFFL_Data <- TFFL_Data[which(TFFL_Data$P_TG<=Pcut&
+                                     TFFL_Data$P_TM<=Pcut&
+                                     TFFL_Data$P_MG<=Pcut&
+                                     abs(TFFL_Data$R_TG)>=Rcut&
+                                     abs(TFFL_Data$R_TM)>=Rcut&
+                                     abs(TFFL_Data$R_MG)>=Rcut&
+                                     TFFL_Data$R_MG < 0&
+                                     TFFL_Data$R_TG > 0&
+                                     TFFL_Data$R_TM > 0
+      ),]
+    }
+    if(TFReg==c("Neg")){
+      TFFL_Data <- TFFL_Data[which(TFFL_Data$P_TG<=Pcut&
+                                     TFFL_Data$P_TM<=Pcut&
+                                     TFFL_Data$P_MG<=Pcut&
+                                     abs(TFFL_Data$R_TG)>=Rcut&
+                                     abs(TFFL_Data$R_TM)>=Rcut&
+                                     abs(TFFL_Data$R_MG)>=Rcut&
+                                     TFFL_Data$R_MG < 0&
+                                     TFFL_Data$R_TG < 0&
+                                     TFFL_Data$R_TM < 0
+      ),]
+    }
   }
   return(TFFL_Data) 
 }
 
-Pick_MFFL <- function(Disease,Pcut=0.05,Rcut=NULL){
+Pick_MFFL <- function(Disease,Pcut=0.05,Rcut=NULL,TFReg=c("Pos","Neg","Bot")){
   sqlite <- dbDriver("SQLite")
   con <- dbConnect(sqlite,"./Database/CoMotif.db")
   TableName <- paste0(Disease,"CMotif")
@@ -91,19 +137,46 @@ Pick_MFFL <- function(Disease,Pcut=0.05,Rcut=NULL){
                                MFFL_Data$P_TM<=Pcut&
                                MFFL_Data$P_MG<=Pcut),]
   }else{
-    MFFL_Data <- MFFL_Data[which(MFFL_Data$P_TG<=Pcut&
-                               MFFL_Data$P_TM<=Pcut&
-                               MFFL_Data$P_MG<=Pcut&
-                               abs(MFFL_Data$R_TG)>=Rcut&
-                               abs(MFFL_Data$R_TM)>=Rcut&
-                               abs(MFFL_Data$R_MG)>=Rcut&
-                               MFFL_Data$R_MG < 0
-    ),]
+    if(TFReg==c("Bot")){
+      MFFL_Data <- MFFL_Data[which(MFFL_Data$P_TG<=Pcut&
+                                     MFFL_Data$P_TM<=Pcut&
+                                     MFFL_Data$P_MG<=Pcut&
+                                     abs(MFFL_Data$R_TG)>=Rcut&
+                                     abs(MFFL_Data$R_TM)>=Rcut&
+                                     abs(MFFL_Data$R_MG)>=Rcut&
+                                     MFFL_Data$R_MG < 0&
+                                     MFFL_Data$R_TM < 0
+      ),]
+    }
+    if(TFReg==c("Pos")){
+      MFFL_Data <- MFFL_Data[which(MFFL_Data$P_TG<=Pcut&
+                                     MFFL_Data$P_TM<=Pcut&
+                                     MFFL_Data$P_MG<=Pcut&
+                                     abs(MFFL_Data$R_TG)>=Rcut&
+                                     abs(MFFL_Data$R_TM)>=Rcut&
+                                     abs(MFFL_Data$R_MG)>=Rcut&
+                                     MFFL_Data$R_MG < 0 &
+                                     MFFL_Data$R_TM < 0 &
+                                     MFFL_Data$R_TG > 0  
+      ),]
+    }
+    if(TFReg==c("Neg")){
+      MFFL_Data <- MFFL_Data[which(MFFL_Data$P_TG<=Pcut&
+                                     MFFL_Data$P_TM<=Pcut&
+                                     MFFL_Data$P_MG<=Pcut&
+                                     abs(MFFL_Data$R_TG)>=Rcut&
+                                     abs(MFFL_Data$R_TM)>=Rcut&
+                                     abs(MFFL_Data$R_MG)>=Rcut&
+                                     MFFL_Data$R_MG < 0 &
+                                     MFFL_Data$R_TM < 0 &
+                                     MFFL_Data$R_TG < 0  
+      ),]
+    }
   }
   return(MFFL_Data) 
 }
 
-Pick_CFFL <- function(Disease,Pcut=0.05,Rcut=NULL){
+Pick_CFFL <- function(Disease,Pcut=0.05,Rcut=NULL,TFReg=c("Pos","Neg","Bot")){
   sqlite <- dbDriver("SQLite")
   con <- dbConnect(sqlite,"./Database/CoMotif.db")
   TableName <- paste0(Disease,"CMotif")
@@ -123,14 +196,38 @@ Pick_CFFL <- function(Disease,Pcut=0.05,Rcut=NULL){
                                CFFL_Data$P_TM<=Pcut&
                                CFFL_Data$P_MG<=Pcut),]
   }else{
-    CFFL_Data <- CFFL_Data[which(CFFL_Data$P_TG<=Pcut&
-                               CFFL_Data$P_TM<=Pcut&
-                               CFFL_Data$P_MG<=Pcut&
-                               abs(CFFL_Data$R_TG)>=Rcut&
-                               abs(CFFL_Data$R_TM)>=Rcut&
-                               abs(CFFL_Data$R_MG)>=Rcut&
-                               CFFL_Data$R_MG < 0
-    ),]
+    if(TFReg==c("Bot")){
+      CFFL_Data <- CFFL_Data[which(CFFL_Data$P_TG<=Pcut&
+                                     CFFL_Data$P_TM<=Pcut&
+                                     CFFL_Data$P_MG<=Pcut&
+                                     abs(CFFL_Data$R_TG)>=Rcut&
+                                     abs(CFFL_Data$R_TM)>=Rcut&
+                                     abs(CFFL_Data$R_MG)>=Rcut&
+                                     CFFL_Data$R_MG < 0
+      ),]
+    }
+    if(TFReg==c("Pos")){
+     CFFL_Data <- CFFL_Data[which(CFFL_Data$P_TG<=Pcut&
+                                    CFFL_Data$P_TM<=Pcut&
+                                    CFFL_Data$P_MG<=Pcut&
+                                    abs(CFFL_Data$R_TG)>=Rcut&
+                                    abs(CFFL_Data$R_TM)>=Rcut&
+                                    abs(CFFL_Data$R_MG)>=Rcut&
+                                    CFFL_Data$R_MG < 0&
+                                    CFFL_Data$R_TG > 0 
+     ),]
+   }
+    if(TFReg==c("Neg")){
+      CFFL_Data <- CFFL_Data[which(CFFL_Data$P_TG<=Pcut&
+                                     CFFL_Data$P_TM<=Pcut&
+                                     CFFL_Data$P_MG<=Pcut&
+                                     abs(CFFL_Data$R_TG)>=Rcut&
+                                     abs(CFFL_Data$R_TM)>=Rcut&
+                                     abs(CFFL_Data$R_MG)>=Rcut&
+                                     CFFL_Data$R_MG < 0&
+                                     CFFL_Data$R_TG < 0 
+      ),]
+    }
   }
   return(CFFL_Data) 
 }
@@ -317,6 +414,8 @@ RegMatch_CFFL <- function(TripleData,TG_RSource,TM_RSource,MG_RSource,MT_RSource
 #'**************************************************
 #'@description parse the co-regulatory data
 #'display the related regulatory database
+#'@date Sep 10: display the related regulatory database
+#'one for TF, one for miRNA
 #' @example 
 #' Disease <- c("BRCA")
 #' SP_Data <- Pick_SP(Disease,Rcut=0.1)
@@ -325,16 +424,29 @@ RegMatch_CFFL <- function(TripleData,TG_RSource,TM_RSource,MG_RSource,MT_RSource
 #'
 coRegKnowledge <- function(TripleData){
   if(nrow(TripleData)==0){return(NULL)}
-  Knowledgebases <- c()
-  Knowledgebases <- apply(TripleData[,c("TG_Source","TM_Source","MG_Source","MT_Source")],
-                          MARGIN = 1,
-                          FUN = function(x){
-                           paste0(x,collapse = "/")
-                          })
+  Knowledgebases_TF <- c()
+  Knowledgebases_miRNA <- c()
+  # Knowledgebases <- apply(TripleData[,c("TG_Source","TM_Source","MG_Source","MT_Source")],
+  #                         MARGIN = 1,
+  #                         FUN = function(x){
+  #                          paste0(x,collapse = "/")
+  #                         })
+  Knowledgebases_TF <- apply(TripleData[,c("TG_Source","TM_Source")],
+                             MARGIN = 1,
+                             FUN = function(x){
+                               paste0(x,collapse = "/")
+                             })
+  Knowledgebases_miRNA <- apply(TripleData[,c("MG_Source","MT_Source")],
+                                MARGIN = 1,
+                                FUN = function(x){
+                                  paste0(x,collapse = "/")
+                                })
   # print(class(Knowledgebases))
-  anno <-  sapply(Knowledgebases,FUN = function(x){revise_Rep(x)})
+  anno_TF <-  sapply(Knowledgebases_TF,FUN = function(x){revise_Rep(x)})
+  anno_miRNA <- sapply(Knowledgebases_miRNA,FUN = function(x){revise_Rep(x)})
   # print(class(anno))
-  TripleData$Knowledgebases <- anno
+  TripleData$Knowledgebases_TF <- anno_TF
+  TripleData$Knowledgebases_miRNA <- anno_miRNA
   return(TripleData)
 }
 

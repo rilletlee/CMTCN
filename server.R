@@ -1,5 +1,5 @@
 #'==============================================================
-#'@description Server page for SCANNER
+#'@description Server page for CMTCN
 #'==============================================================
 # load("./Profile/Project.Rd")
 #'==============================================================
@@ -15,10 +15,9 @@ source("helpers.R")
 #' Getting start page's Server
 #'==============================================================
 shinyServer(function(input,output,session){
- # source("server-tab-Home.R",local = TRUE)
   source("server-tab-Start.R",local = TRUE)
   source("server-tab-Network.R",local = TRUE)
-  #source("server-tab-Download.R",local = TRUE)
   source("server-tab-Tutorial.R",local = TRUE)
   source("server-tab-News.R",local = TRUE)
+  source("server-tab-About.R",local = TRUE)
 })
